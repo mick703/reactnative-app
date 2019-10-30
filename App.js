@@ -1,51 +1,31 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Button,
-  TextInput,
-  Text,
-  FlatList,
-  TouchableOpacity
-} from "react-native";
+import { StyleSheet, View } from "react-native";
+
+import GoalInput from "./components/GoalInput";
+import GoalList from "./components/GoalList";
 
 export default function App() {
-  const [enteredGoal, setEnteredGoal] = useState("");
   const [courseGoals, setCourseGoals] = useState([]);
 
-  const goalInputHandler = enteredInput => {
-    setEnteredGoal(enteredInput);
-  };
-
-  const addGoalHandler = () => {
+  const addGoalHandler = enteredGoal => {
     setCourseGoals(currentGoals => [
       ...courseGoals,
       { key: Math.random().toString(), value: enteredGoal }
     ]);
-    setEnteredGoal("");
+  };
+
+  const deleteGoalHandler = goalToDelete => {
+    setCourseGoals(currentGoals => {
+      return currentGoals.filter(goalItem => {
+        return goalItem.key !== goalToDelete.key;
+      });
+    });
   };
 
   return (
     <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Course Goal"
-          style={styles.input}
-          onChangeText={goalInputHandler}
-          value={enteredGoal}
-        />
-        <Button title="ADD" onPress={addGoalHandler} />
-      </View>
-      <FlatList
-        data={courseGoals}
-        renderItem={itemData => (
-          <TouchableOpacity>
-            <View style={styles.item}>
-              <Text>{itemData.item.value}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+      <GoalInput addGoal={addGoalHandler} />
+      <GoalList goalItems={courseGoals} deleteGoal={deleteGoalHandler} />
     </View>
   );
 }
@@ -53,19 +33,5 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     padding: 50
-  },
-  inputContainer: {
-    flexDirection: "row"
-  },
-  input: {
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e5e5"
-  },
-  item: {
-    fontSize: 20,
-    marginBottom: 10,
-    padding: 5,
-    backgroundColor: "#e5e5e5"
   }
 });
