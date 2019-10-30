@@ -10,6 +10,7 @@ import {
 export default GoalList = props => {
   return (
     <FlatList
+      style={{ flex: 1 }}
       data={props.goalItems}
       renderItem={itemData => (
         <TouchableOpacity onPress={props.deleteGoal.bind(this, itemData.item)}>
